@@ -1,337 +1,329 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
 <title>当選シミュレーター</title>
 
 <style>
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+:root {
+  --blue: #0055a4;
+  --red: #ef4135;
+  --ink: #222222;
+  --muted: #777777;
 }
 
 body {
-    margin: 0;
-    min-height: 100vh;
-    padding: 30px 18px;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Hiragino Kaku Gothic ProN",
-        "Yu Gothic",
-        Meiryo,
-        sans-serif;
-
-    background: linear-gradient(
-        135deg,
-        #eef5ff,
-        #ffffff 50%,
-        #fff0f3
-    );
-
-    color: #222;
+  margin: 0;
+  min-height: 100vh;
+  padding: 28px 16px;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(
+    135deg, #eef5ff 0%, #ffffff 50%, #fff0f3 100%
+  );
 }
 
 .container {
-    max-width: 430px;
-    margin: auto;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
 }
 
 .header {
-    text-align: center;
-    margin-bottom: 25px;
+  text-align: center;
+  margin-bottom: 22px;
 }
 
 .flag {
-    width: 90px;
-    height: 7px;
-    display: flex;
-    margin: 0 auto 15px;
-    border-radius: 10px;
-    overflow: hidden;
+  display: flex;
+  width: 90px;
+  height: 7px;
+  margin: 0 auto 14px;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
-.blue {
-    background: #0055a4;
-    flex: 1;
+.flag span {
+  flex: 1;
 }
 
-.white {
-    background: #fff;
-    flex: 1;
-}
-
-.red {
-    background: #ef4135;
-    flex: 1;
-}
+.flag .blue { background: var(--blue); }
+.flag .white { background: #ffffff; }
+.flag .red { background: var(--red); }
 
 h1 {
-    margin: 0;
-    font-size: 26px;
-    font-weight: 800;
+  margin: 0;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: .03em;
 }
 
 .subtitle {
-    margin-top: 8px;
-    font-size: 13px;
-    color: #777;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .card {
-    background: #fff;
-    border-radius: 24px;
-    padding: 24px 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  padding: 22px 20px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, .04);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .07);
 }
 
 .question {
-    text-align: center;
-    font-weight: 800;
-    font-size: 16px;
-    margin-bottom: 18px;
+  margin: 2px 0 20px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 800;
 }
 
 .buttons {
-    display: flex;
-    gap: 12px;
+  display: flex;
+  gap: 12px;
 }
 
 .choice {
-    flex: 1;
-    border: none;
-    border-radius: 18px;
-    padding: 22px 10px;
-    color: #fff;
-    cursor: pointer;
-    transition: transform 0.12s;
+  flex: 1;
+  min-width: 0;
+  min-height: 145px;
+  padding: 20px 10px;
+  border: 0;
+  border-radius: 18px;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  transition: transform .12s, filter .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.choice:hover {
+  filter: brightness(1.04);
 }
 
 .choice:active {
-    transform: scale(0.94);
+  transform: scale(.96);
 }
 
-.single {
-    background: #0055a4;
+.choice:focus-visible {
+  outline: 3px solid #222222;
+  outline-offset: 3px;
 }
 
-.pair {
-    background: #ef4135;
-}
+.single { background: var(--blue); }
+.pair { background: var(--red); }
 
 .icon {
-    font-size: 32px;
-    margin-bottom: 7px;
+  min-height: 42px;
+  margin-bottom: 6px;
+  font-size: 30px;
 }
 
 .name {
-    font-size: 18px;
-    font-weight: 800;
+  font-size: 18px;
+  font-weight: 800;
 }
 
 .count {
-    margin-top: 4px;
-    font-size: 13px;
-    opacity: 0.9;
+  margin-top: 5px;
+  font-size: 13px;
+  opacity: .92;
 }
 
 .result {
-    margin-top: 22px;
-    display: none;
-    text-align: center;
-    padding: 30px 15px;
-    border-radius: 20px;
-    background: #fafafa;
+  display: none;
+  margin-top: 22px;
+  padding: 26px 15px 20px;
+  border-radius: 20px;
+  background: #fafafa;
+  text-align: center;
 }
 
 .result.show {
-    display: block;
+  display: block;
+}
+
+.draw-count {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: #edf3fa;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.picked-type {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .result-icon {
-    font-size: 58px;
-    margin-bottom: 8px;
+  margin-bottom: 7px;
+  font-size: 58px;
+  line-height: 1.2;
 }
 
 .result-text {
-    font-size: 32px;
-    font-weight: 900;
+  font-size: 32px;
+  font-weight: 900;
 }
 
 .result-sub {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #777;
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-.again {
-    margin-top: 20px;
-    width: 100%;
-    height: 48px;
-    border: none;
-    border-radius: 14px;
-    background: #222;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
+.result.win .result-text {
+  color: var(--red);
 }
 
-.win .result-text {
-    color: #ef4135;
+.result.lose .result-text {
+  color: var(--blue);
 }
 
-.lose .result-text {
-    color: #0055a4;
+.hint {
+  margin-top: 18px;
+  color: #888888;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
+@media (max-width: 360px) {
+  body { padding: 20px 12px; }
+  .card { padding: 18px 14px; }
+  .buttons { gap: 9px; }
+  .choice { min-height: 132px; }
+  h1 { font-size: 22px; }
+}
 </style>
 </head>
 
 <body>
+<main class="container">
 
-<div class="container">
-
-    <div class="header">
-
-        <div class="flag">
-            <div class="blue"></div>
-            <div class="white"></div>
-            <div class="red"></div>
-        </div>
-
-        <h1>🎟️ 当選シミュレーター</h1>
-
-        <div class="subtitle">
-            どちらで運試しする？✨
-        </div>
-
+  <header class="header">
+    <div class="flag" aria-hidden="true">
+      <span class="blue"></span>
+      <span class="white"></span>
+      <span class="red"></span>
     </div>
 
+    <h1>🎟️ ChristmasEvent当落シミュレーター</h1>
+    <div class="subtitle">どちらで運試しする？✨</div>
+  </header>
 
-    <div class="card">
+  <section class="card" aria-label="抽選">
 
-        <div class="question">
-            申し込むのはどっち？
-        </div>
+    <p class="question">申し込むのはどっち？</p>
 
-        <div class="buttons">
+    <div class="buttons">
+      <button
+        class="choice single"
+        type="button"
+        onclick="lottery('single')">
 
-            <button
-                class="choice single"
-                onclick="lottery('single')">
+        <div class="icon" aria-hidden="true">🎫</div>
+        <div class="name">単番</div>
 
-                <div class="icon">🎫</div>
+      </button>
 
-                <div class="name">
-                    単番
-                </div>
+      <button
+        class="choice pair"
+        type="button"
+        onclick="lottery('pair')">
 
-                <div class="count">
-                    1枚
-                </div>
+        <div class="icon" aria-hidden="true">🎟️🎟️</div>
+        <div class="name">連番</div>
 
-            </button>
-
-
-            <button
-                class="choice pair"
-                onclick="lottery('pair')">
-
-                <div class="icon">🎟️🎟️</div>
-
-                <div class="name">
-                    2連
-                </div>
-
-                <div class="count">
-                    2枚
-                </div>
-
-            </button>
-
-        </div>
-
-
-        <div id="result" class="result">
-
-            <div id="resultIcon" class="result-icon">
-            </div>
-
-            <div id="resultText" class="result-text">
-            </div>
-
-            <div id="resultSub" class="result-sub">
-            </div>
-
-        </div>
-
+      </button>
     </div>
 
-</div>
+    <section
+      id="result"
+      class="result"
+      aria-live="polite"
+      aria-atomic="true">
 
+      <div id="drawCount" class="draw-count">
+        抽選回数：0回目
+      </div>
+
+      <div id="pickedType" class="picked-type"></div>
+      <div id="resultIcon" class="result-icon"></div>
+      <div id="resultText" class="result-text"></div>
+      <div id="resultSub" class="result-sub"></div>
+
+    </section>
+
+    <p class="hint">
+      単番・連番のボタンを押すたびに再抽選されます🎲
+    </p>
+
+  </section>
+</main>
 
 <script>
+// お遊び用の当選確率（画面には表示しません）
+const SINGLE_RATE = 0.0247;
+const PAIR_RATE = 0.0213;
+
+// ページを開いている間の累計抽選回数
+let drawCount = 0;
 
 function lottery(type) {
+  // ボタンを押すたびに回数を加算
+  drawCount += 1;
 
-    // 内部で使用する当選確率
-    const singleRate = 0.0247;
-    const pairRate = 0.0213;
+  // 単番・2連それぞれの確率で抽選
+  const rate = type === "single"
+    ? SINGLE_RATE
+    : PAIR_RATE;
 
-    const rate =
-        type === "single"
-        ? singleRate
-        : pairRate;
+  const isWin = Math.random() < rate;
 
-    const isWin = Math.random() < rate;
+  const result = document.getElementById("result");
 
-    const result = document.getElementById("result");
-    const icon = document.getElementById("resultIcon");
-    const text = document.getElementById("resultText");
-    const sub = document.getElementById("resultSub");
+  // 抽選回数と今回の申込タイプを更新
+  document.getElementById("drawCount").textContent =
+    `抽選回数：${drawCount}回目`;
 
-    result.className = "result show";
+  document.getElementById("pickedType").textContent =
+    type === "single"
+      ? "今回の抽選：単番"
+      : "今回の抽選：連番";
 
-    if (isWin) {
+  // 当選・落選を表示
+  document.getElementById("resultIcon").textContent =
+    isWin ? "🎉" : "😭";
 
-        result.classList.add("win");
+  document.getElementById("resultText").textContent =
+    isWin ? "当選！！" : "落選…";
 
-        icon.textContent = "🎉";
-        text.textContent = "当選！！";
-        sub.textContent =
-            type === "single"
-            ? "単番、引き当てました！✨"
-            : "2連、引き当てました！！✨";
+  document.getElementById("resultSub").textContent =
+    isWin
+      ? (type === "single"
+          ? "おめでとう！単番を引き当てました！✨"
+          : "おめでとう！連番を引き当てました！！✨")
+      : "今回は残念…🥲";
 
-    } else {
-
-        result.classList.add("lose");
-
-        icon.textContent = "😭";
-        text.textContent = "落選…";
-        sub.textContent =
-            type === "single"
-            ? "今回は残念…🥲"
-            : "今回は残念…🥲";
-
-    }
-
-    result.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    });
+  // 結果の色を更新して、結果エリアを表示
+  result.classList.remove("win", "lose");
+  result.classList.add("show", isWin ? "win" : "lose");
 }
-
-
-function resetResult() {
-
-    const result = document.getElementById("result");
-
-    result.className = "result";
-
-}
-
 </script>
 
 </body>
